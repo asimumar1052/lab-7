@@ -16,47 +16,75 @@ public class WordGuessGame extends JFrame {
     private JTextField guessField;
     private JButton submitButton;
     private JLabel feedbackLabel;
+    private JLabel attemptsLabel;
 
     public WordGuessGame() {
         setTitle("Word Guess Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 300);
+        setSize(500, 350);
+        setLocationRelativeTo(null); // Center the window on screen
 
         // Main panel setup
         JPanel mainPanel = new JPanel();
         mainPanel.setBackground(new Color(240, 248, 255));
-        mainPanel.setLayout(new BorderLayout(10, 10));
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
         add(mainPanel);
 
-        // Top panel for input and button
-        JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(2, 1, 10, 10));
-        inputPanel.setBackground(new Color(240, 248, 255));
-        mainPanel.add(inputPanel, BorderLayout.NORTH);
+        // Title label
+        JLabel titleLabel = new JLabel("Welcome to the Word Guess Game!");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setForeground(new Color(25, 25, 112));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.insets = new Insets(10, 0, 10, 0); // Spacing
+        mainPanel.add(titleLabel, gbc);
 
         // Instruction label
-        instructionLabel = new JLabel("Guess the word! You have 3 attempts.", JLabel.CENTER);
-        instructionLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        instructionLabel = new JLabel("Guess the word! You have 3 attempts.");
+        instructionLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         instructionLabel.setForeground(new Color(25, 25, 112));
-        mainPanel.add(instructionLabel, BorderLayout.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        mainPanel.add(instructionLabel, gbc);
 
-        // Guess field at the top
+        // Guess field and submit button
         guessField = new JTextField();
         guessField.setFont(new Font("Arial", Font.PLAIN, 14));
-        inputPanel.add(guessField);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(guessField, gbc);
 
-        // Submit button below the input field
         submitButton = new JButton("Submit");
         submitButton.setFont(new Font("Arial", Font.BOLD, 14));
         submitButton.setBackground(new Color(173, 216, 230));
         submitButton.setForeground(Color.BLACK);
-        inputPanel.add(submitButton);
+        submitButton.setFocusPainted(false);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        mainPanel.add(submitButton, gbc);
 
-        // Feedback label at the bottom
-        feedbackLabel = new JLabel("Hint: " + hints[0], JLabel.CENTER);
+        // Feedback label
+        feedbackLabel = new JLabel("Hint: " + hints[0]);
         feedbackLabel.setFont(new Font("Arial", Font.ITALIC, 14));
         feedbackLabel.setForeground(new Color(0, 100, 0));
-        mainPanel.add(feedbackLabel, BorderLayout.SOUTH);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        mainPanel.add(feedbackLabel, gbc);
+
+        // Attempts label
+        attemptsLabel = new JLabel("Attempts left: 3");
+        attemptsLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        attemptsLabel.setForeground(new Color(255, 69, 0));
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        mainPanel.add(attemptsLabel, gbc);
 
         // Submit button action listener
         submitButton.addActionListener(new ActionListener() {
@@ -68,12 +96,15 @@ public class WordGuessGame extends JFrame {
                 if (userGuess.equals(secretWord)) {
                     feedbackLabel.setText("Correct! The word is: " + secretWord);
                     feedbackLabel.setForeground(new Color(34, 139, 34));
+                    attemptsLabel.setText("Attempts left: 0");
                     submitButton.setEnabled(false);
                 } else if (attempts < 3) {
                     feedbackLabel.setText("Hint: " + hints[attempts]);
+                    attemptsLabel.setText("Attempts left: " + (3 - attempts));
                 } else {
                     feedbackLabel.setText("Game over! The word was: " + secretWord);
                     feedbackLabel.setForeground(new Color(139, 0, 0));
+                    attemptsLabel.setText("Attempts left: 0");
                     submitButton.setEnabled(false);
                 }
             }
